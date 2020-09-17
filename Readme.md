@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Виктор Чернов](https://up.htmlacademy.ru/javascript/21/user/1479435).
-* Наставник: `Неизвестно`.
+* Наставник: [Саша Джинн](https://htmlacademy.ru/profile/jinonensk).
 
 ---
 
