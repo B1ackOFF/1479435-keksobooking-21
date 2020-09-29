@@ -55,8 +55,6 @@ const MAX_COORDINATE_Y = 630;
 const MIN_COORDINATE_Y = 130;
 const MAX_PRICE = 10000;
 const MIN_PRICE = 1000;
-const MAX_AMOUNT_USERS = 8;
-const MIN_AMOUNT_USERS = 1;
 
 const mapNode = document.querySelector(`.map`);
 const mapPinsNode = mapNode.querySelector(`.map__pins`);
@@ -76,11 +74,12 @@ const getRandomInRange = (min, max) => {
 
 const createDataArray = (amount) => {
   const array = [];
+  let currentUser = 1;
   for (let i = 0; i < amount; i++) {
     array.push(
         {
           author: {
-            avatar: `img/avatars/user0${getRandomInRange(MIN_AMOUNT_USERS, MAX_AMOUNT_USERS)}.png`
+            avatar: `img/avatars/user0${currentUser + i}.png`
           },
           location: {
             x: getRandomInRange(MIN_COORDINATE_X, MAX_COORDINATE_X),
