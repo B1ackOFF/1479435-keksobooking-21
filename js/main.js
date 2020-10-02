@@ -7,7 +7,7 @@ const TITLES = [
   `Утепленный гараж`,
   `Просторная коробка`
 ];
-const HOUSES_TYPES = [
+const HOUSE_TYPES = [
   `palace`,
   `flat`,
   `house`,
@@ -48,13 +48,16 @@ const PHOTOS_URLS = [
   `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
-const PIN_AMOUNT = 8;
+const PINS_AMOUNT = 8;
 const MAX_COORDINATE_X = 1150;
 const MIN_COORDINATE_X = 50;
 const MAX_COORDINATE_Y = 630;
 const MIN_COORDINATE_Y = 130;
 const MAX_PRICE = 10000;
 const MIN_PRICE = 1000;
+const PINS_DISPLACEMENT_X = 25;
+const PINS_DISPLACEMENT_Y = 35;
+
 
 const mapNode = document.querySelector(`.map`);
 const mapPinsNode = mapNode.querySelector(`.map__pins`);
@@ -74,12 +77,11 @@ const getRandomInRange = (min, max) => {
 
 const createDataArray = (amount) => {
   const array = [];
-  let currentUser = 1;
   for (let i = 0; i < amount; i++) {
     array.push(
         {
           author: {
-            avatar: `img/avatars/user0${currentUser + i}.png`
+            avatar: `img/avatars/user0${i + 1}.png`
           },
           location: {
             x: getRandomInRange(MIN_COORDINATE_X, MAX_COORDINATE_X),
@@ -89,7 +91,7 @@ const createDataArray = (amount) => {
             title: getRandomData(TITLES),
             address: `${getRandomInRange(MIN_COORDINATE_X, MAX_COORDINATE_X)}, ${getRandomInRange(MIN_COORDINATE_Y, MAX_COORDINATE_Y)}`,
             price: getRandomInRange(MIN_PRICE, MAX_PRICE),
-            type: getRandomData(HOUSES_TYPES),
+            type: getRandomData(HOUSE_TYPES),
             rooms: getRandomData(ROOMS_AMOUNT),
             guests: getRandomData(GUESTS_AMOUNT),
             checkin: getRandomData(CHECKINS),
@@ -106,8 +108,8 @@ const createDataArray = (amount) => {
 
 const createPin = (array) => {
   const pinElement = mapPinTemplate.cloneNode(true);
-  pinElement.style.left = `${array.location.x - 25}px`;
-  pinElement.style.top = `${array.location.y - 35}px`;
+  pinElement.style.left = `${array.location.x - PINS_DISPLACEMENT_X}px`;
+  pinElement.style.top = `${array.location.y - PINS_DISPLACEMENT_Y}px`;
   pinElement.querySelector(`img`).src = array.author.avatar;
   pinElement.querySelector(`img`).alt = array.offer.title;
 
@@ -128,7 +130,7 @@ const addNodeFragment = (element) => {
 };
 
 const initPinsScreen = () => {
-  const pinsDataArray = createDataArray(PIN_AMOUNT);
+  const pinsDataArray = createDataArray(PINS_AMOUNT);
   const pinsNodesFragment = createNodeFragment(pinsDataArray);
 
   addNodeFragment(pinsNodesFragment);
