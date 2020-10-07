@@ -176,8 +176,6 @@ const createCard = (dataObject) => {
   const featureNodes = cardElement.querySelectorAll(`.popup__feature`);
   for (let i = 0; i < featureNodes.length; i++) {
     featureNodes[i].style.display = `none`;
-  }
-  for (let j = 0; j < featureNodes.length; j++) {
     featureNodes[getRandomNumber(FEATURES)].style.display = `inline-block`;
   }
 
