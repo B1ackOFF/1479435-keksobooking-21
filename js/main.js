@@ -9,7 +9,7 @@ const TITLES = [
 ];
 const DESCRIPTIONS = [
   `Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.`,
-  `Шикарное маленькое жилище на окраине города. Рядом большой парк, 30 минут до центра на вертолете! Удобства на улице. Звонить сне ранее, чем с 11-00 и не позднее 20-00`,
+  `Шикарное маленькое жилище на окраине города. Рядом большой парк, 30 минут до центра на вертолете! Удобства на улице. Звонить не ранее 11-00 и не позднее 20-00`,
   `Уютный вариант, который подойдет молодоженам и семейным парам, только славяне. Предоплата 100% за первый и последний месяц. Риэлторам не беспокоить!`
 ];
 const HOUSE_TYPES = {
@@ -53,16 +53,6 @@ const PHOTOS_URLS = [
   `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
-const PINS_AMOUNT = 8;
-const MAX_COORDINATE_X = 1150;
-const MIN_COORDINATE_X = 50;
-const MAX_COORDINATE_Y = 630;
-const MIN_COORDINATE_Y = 130;
-const MAX_PRICE = 10000;
-const MIN_PRICE = 1000;
-const PINS_DISPLACEMENT_X = 25;
-const PINS_DISPLACEMENT_Y = 35;
-
 
 const mapNode = document.querySelector(`.map`);
 const mapPinsNode = mapNode.querySelector(`.map__pins`);
@@ -70,40 +60,44 @@ const mapPinTemplate = document.querySelector(`#pin`).content.querySelector(`.ma
 const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 const mapFilterContainerNode = mapNode.querySelector(`.map__filters-container`);
 
+
+const PINS_AMOUNT = 8;
+const MAX_PRICE = 10000;
+const MIN_PRICE = 1000;
+const PIN_WIDTH = 50;
+const PIN_HEIGHT = 70;
+const PINS_DISPLACEMENT_X = PIN_WIDTH / 2;
+const PINS_DISPLACEMENT_Y = PIN_HEIGHT / 2;
+const MAX_COORDINATE_X = mapPinsNode.offsetWidth - PIN_WIDTH;
+const MIN_COORDINATE_X = 0 + PIN_WIDTH;
+const MAX_COORDINATE_Y = 630;
+const MIN_COORDINATE_Y = 130;
+
 const activeModeOn = (element) => {
   element.classList.remove(`map--faded`);
 };
 
-/* функция возвращающая неповторяющееся рандомное число
-const nonRepeatingRandomNumber = (minNumber, maxNumber) => {
-  let totalNumbers = maxNumber - minNumber + 1;
-  let arrayTotalNumbers = [];
-  let arrayRandomNumbers = [];
-  let tempRandomNumber;
-
-  while (totalNumbers--) {
-    arrayTotalNumbers.push(totalNumbers + minNumber);
-  }
-
-  while (arrayTotalNumbers.length) {
-    tempRandomNumber = Math.round(Math.random() * (arrayTotalNumbers.length - 1));
-    arrayRandomNumbers.push(arrayTotalNumbers[tempRandomNumber]);
-    arrayTotalNumbers.splice(tempRandomNumber, 1);
-  }
-
-  return arrayRandomNumbers;
+const getRandomData = (array) => {
+  return array[Math.floor(Math.random() * array.length)];
 };
-*/
 
-const getRandomData = (arrayName) => {
-  return arrayName[Math.floor(Math.random() * arrayName.length)];
-};
-const getRandomNumber = (arrName) => {
-  return [Math.floor(Math.random() * arrName.length)];
+const getRandomNumber = (array) => {
+  return [Math.floor(Math.random() * array.length)];
 };
 
 const getRandomInRange = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const shuffleArray = (array) => {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = result[i];
+    result[i] = result[j];
+    result[j] = temp;
+  }
+  return result;
 };
 
 const createDataArray = (amount) => {
@@ -127,9 +121,9 @@ const createDataArray = (amount) => {
             guests: getRandomData(GUESTS_AMOUNT),
             checkin: getRandomData(CHECKINS),
             checkout: getRandomData(CHECKOUTS),
-            features: getRandomData(FEATURES),
+            features: shuffleArray(FEATURES).slice(0, getRandomNumber(FEATURES)),
             description: getRandomData(DESCRIPTIONS),
-            photos: getRandomData(PHOTOS_URLS)
+            photos: shuffleArray(PHOTOS_URLS).slice(0, getRandomNumber(PHOTOS_URLS))
           }
         }
     );
@@ -149,6 +143,7 @@ const createPin = (array) => {
 
 const createNodeFragment = (pin) => {
   const fragment = document.createDocumentFragment();
+
   for (let i = 0; i < pin.length; i++) {
     fragment.appendChild(createPin(pin[i]));
   }
@@ -162,7 +157,6 @@ const addNodeFragment = (element) => {
 
 const createCard = (dataObject) => {
   const cardElement = mapCardTemplate.cloneNode(true);
-
   cardElement.querySelector(`.popup__title`).textContent = dataObject.offer.title;
   cardElement.querySelector(`.popup__text--address`).textContent = dataObject.offer.address;
   cardElement.querySelector(`.popup__text--price`).textContent = `${dataObject.offer.price} ₽/ночь`;
@@ -171,12 +165,27 @@ const createCard = (dataObject) => {
   cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ${dataObject.offer.checkin}, выезд до ${dataObject.offer.checkout}`;
   cardElement.querySelector(`.popup__description`).textContent = dataObject.offer.description;
   cardElement.querySelector(`.popup__avatar`).src = dataObject.author.avatar;
-  cardElement.querySelector(`.popup__photo`).src = dataObject.offer.photos;
 
-  const featureNodes = cardElement.querySelectorAll(`.popup__feature`);
-  for (let i = 0; i < featureNodes.length; i++) {
-    featureNodes[i].style.display = `none`;
-    featureNodes[getRandomNumber(FEATURES)].style.display = `inline-block`;
+  const popupPhotos = cardElement.querySelector(`.popup__photos`);
+  const photo = popupPhotos.querySelector(`.popup__photo`);
+  const fragment = document.createDocumentFragment();
+  popupPhotos.removeChild(photo);
+
+  for (let i = 0; i < dataObject.offer.photos.length; i++) {
+    fragment.appendChild(photo.cloneNode(true)).src = dataObject.offer.photos[i];
+  }
+  popupPhotos.appendChild(fragment);
+
+  const popupFeatures = cardElement.querySelector(`.popup__features`);
+  const features = popupFeatures.querySelectorAll(`.popup__feature`);
+  const pinsClasses = dataObject.offer.features;
+
+  for (let j = 0; j < features.length; j++) {
+    let feature = features[j];
+    let pinClassName = feature.className.replace(`popup__feature popup__feature--`, ``);
+    if (pinsClasses.includes(pinClassName) === false) {
+      feature.remove();
+    }
   }
 
   return cardElement;
