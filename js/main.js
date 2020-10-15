@@ -48,6 +48,16 @@ const GUESTS_AMOUNT = [
   1,
   0
 ];
+const ROOMS_FOR_GUESTS = {
+  1: [`1`],
+  2: [`1`, `2`],
+  3: [`1`, `2`, `3`],
+  100: [`0`]
+};
+const KeyboardKeys = {
+  ESCAPE: `Escape`,
+  ENTER: `Enter`
+};
 const PHOTOS_URLS = [
   `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
   `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
@@ -57,9 +67,12 @@ const PHOTOS_URLS = [
 const mapNode = document.querySelector(`.map`);
 const mapPinsNode = mapNode.querySelector(`.map__pins`);
 const mapPinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
-const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+// const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 const mapFilterContainerNode = mapNode.querySelector(`.map__filters-container`);
-
+const formFiltersNode = mapFilterContainerNode.querySelector(`.map__filters`);
+const mapPinMain = document.querySelector(`.map__pin--main`);
+const formNode = document.querySelector(`.ad-form`);
+const formSubmit = formNode.querySelector(`.ad-form__submit`);
 
 const PINS_AMOUNT = 8;
 const MAX_PRICE = 10000;
@@ -72,9 +85,32 @@ const MAX_COORDINATE_X = mapPinsNode.offsetWidth - PIN_WIDTH;
 const MIN_COORDINATE_X = 0 + PIN_WIDTH;
 const MAX_COORDINATE_Y = 630;
 const MIN_COORDINATE_Y = 130;
+const MAIN_PIN_WIDTH = 62;
+const MAIN_PIN_HEIGHT = 62;
+const PSEUDO_ELEMENT_PIN_HEIGHT = 22;
 
+/*
 const activeModeOn = (element) => {
   element.classList.remove(`map--faded`);
+};
+*/
+const toggleDisabledOnFormNodes = () => {
+  const pageIsActive = formNode.classList.contains(`ad-form--disabled`);
+
+  Array.from(formNode.children).forEach((children) => {
+    children.disabled = pageIsActive;
+    children.classList.toggle(`disable-cursor`);
+  });
+  Array.from(formFiltersNode.children).forEach((children) => {
+    children.disabled = pageIsActive;
+    children.classList.toggle(`disable-cursor`);
+  });
+};
+
+const onActiveMode = () => {
+  mapNode.classList.remove(`map--faded`);
+  formNode.classList.remove(`ad-form--disabled`);
+  toggleDisabledOnFormNodes();
 };
 
 const getRandomData = (array) => {
@@ -154,7 +190,7 @@ const createNodeFragment = (pin) => {
 const addNodeFragment = (element) => {
   mapPinsNode.appendChild(element);
 };
-
+/*
 const createCard = (dataObject) => {
   const cardElement = mapCardTemplate.cloneNode(true);
   cardElement.querySelector(`.popup__title`).textContent = dataObject.offer.title;
@@ -183,7 +219,7 @@ const createCard = (dataObject) => {
   for (let j = 0; j < features.length; j++) {
     let feature = features[j];
     let pinClassName = feature.className.replace(`popup__feature popup__feature--`, ``);
-    if (pinsClasses.includes(pinClassName) === false) {
+    if (!pinsClasses.includes(pinClassName)) {
       feature.remove();
     }
   }
@@ -197,14 +233,56 @@ const createCardFragment = (cardObj) => {
 
   return cardFragment;
 };
+*/
+const getMainMapPinCoordinateX = () => {
+  return parseInt(mapPinMain.style.left, 10) + (MAIN_PIN_WIDTH / 2);
+};
+
+const getMainMapPinCoordinateY = () => {
+  return parseInt(mapPinMain.style.top, 10) + (MAIN_PIN_HEIGHT) + (PSEUDO_ELEMENT_PIN_HEIGHT / 2);
+};
+
+const passAddressInput = () => {
+  formNode.address.value = `${getMainMapPinCoordinateX()}, ${getMainMapPinCoordinateY()}`;
+};
 
 const initPinsScreen = () => {
   const pinsDataArray = createDataArray(PINS_AMOUNT);
   const pinsNodesFragment = createNodeFragment(pinsDataArray);
-  const cardNodesFragment = createCardFragment(pinsDataArray[0]);
   addNodeFragment(pinsNodesFragment);
-  mapNode.insertBefore(cardNodesFragment, mapFilterContainerNode);
-  activeModeOn(mapNode);
+  // const cardNodesFragment = createCardFragment(pinsDataArray[0]);
+  // mapNode.insertBefore(cardNodesFragment, mapFilterContainerNode);
+  // activeModeOn(mapNode);
 };
 
-initPinsScreen();
+const validateRoomsInput = () => {
+  const validateRooms = !ROOMS_FOR_GUESTS[formNode.rooms.value].includes(formNode.capacity.value) ? formNode.capacity.setCustomValidity(`Не возможно выбрать данное количество гостей`) : formNode.capacity.setCustomValidity(``);
+  formNode.capacity.reportValidity();
+  return validateRooms;
+};
+
+toggleDisabledOnFormNodes();
+
+mapPinMain.addEventListener(`mousedown`, function (evt) {
+  if (evt.button === 0) {
+    onActiveMode();
+    initPinsScreen();
+    passAddressInput();
+  }
+}, {
+  once: true
+});
+
+mapPinMain.addEventListener(`keydown`, function (evt) {
+  if (evt.key === KeyboardKeys.ENTER) {
+    onActiveMode();
+    initPinsScreen();
+    passAddressInput();
+  }
+}, {
+  once: true
+});
+
+formNode.capacity.addEventListener(`input`, validateRoomsInput);
+formNode.rooms.addEventListener(`input`, validateRoomsInput);
+formSubmit.addEventListener(`click`, validateRoomsInput);
