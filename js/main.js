@@ -255,8 +255,12 @@ const initPinsScreen = () => {
   // activeModeOn(mapNode);
 };
 
+console.log(ROOMS_FOR_GUESTS);
+console.log(formNode.rooms.value);
+console.log(ROOMS_FOR_GUESTS[formNode.rooms.value]);
+
 const validateRoomsInput = () => {
-  const validateRooms = !ROOMS_FOR_GUESTS[formNode.rooms.value].includes(formNode.capacity.value) ? formNode.capacity.setCustomValidity(`Не возможно выбрать данное количество гостей`) : formNode.capacity.setCustomValidity(``);
+  const validateRooms = ROOMS_FOR_GUESTS[formNode.rooms.value].includes(formNode.capacity.value) ? formNode.capacity.setCustomValidity(``) : formNode.capacity.setCustomValidity(`Не возможно выбрать данное количество гостей`);
   formNode.capacity.reportValidity();
   return validateRooms;
 };
