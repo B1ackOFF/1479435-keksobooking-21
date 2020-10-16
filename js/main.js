@@ -262,12 +262,12 @@ const validateRoomsInput = () => {
 };
 
 toggleDisabledOnFormNodes();
+passAddressInput();
 
 mapPinMain.addEventListener(`mousedown`, function (evt) {
   if (evt.button === 0) {
     onActiveMode();
     initPinsScreen();
-    passAddressInput();
   }
 }, {
   once: true
@@ -277,7 +277,6 @@ mapPinMain.addEventListener(`keydown`, function (evt) {
   if (evt.key === KeyboardKeys.ENTER) {
     onActiveMode();
     initPinsScreen();
-    passAddressInput();
   }
 }, {
   once: true
