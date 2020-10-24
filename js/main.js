@@ -54,9 +54,24 @@ const ROOMS_FOR_GUESTS = {
   3: [`1`, `2`, `3`],
   100: [`0`]
 };
+const PRICE = {
+  palace: 10000,
+  house: 5000,
+  flat: 1000,
+  bungalow: 0
+};
 const KeyboardKeys = {
   ESCAPE: `Escape`,
   ENTER: `Enter`
+};
+/*
+const MouseKeys = {
+  LEFT_CLICK_MOUSE: 0
+};
+*/
+const TitleLength = {
+  MIN: 30,
+  MAX: 100
 };
 const PHOTOS_URLS = [
   `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
@@ -67,12 +82,12 @@ const PHOTOS_URLS = [
 const mapNode = document.querySelector(`.map`);
 const mapPinsNode = mapNode.querySelector(`.map__pins`);
 const mapPinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
-// const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 const mapFilterContainerNode = mapNode.querySelector(`.map__filters-container`);
 const formFiltersNode = mapFilterContainerNode.querySelector(`.map__filters`);
 const mapPinMain = document.querySelector(`.map__pin--main`);
 const formNode = document.querySelector(`.ad-form`);
-const formSubmit = formNode.querySelector(`.ad-form__submit`);
+// const formSubmit = formNode.querySelector(`.ad-form__submit`);
 
 const PINS_AMOUNT = 8;
 const MAX_PRICE = 10000;
@@ -94,16 +109,18 @@ const activeModeOn = (element) => {
   element.classList.remove(`map--faded`);
 };
 */
-const toggleDisabledOnFormNodes = () => {
-  const pageIsActive = formNode.classList.contains(`ad-form--disabled`);
+let isPageDisabled = false;
 
-  Array.from(formNode.children).forEach((children) => {
-    children.disabled = pageIsActive;
-    children.classList.toggle(`disable-cursor`);
+const toggleDisabledOnFormNodes = () => {
+  isPageDisabled = !isPageDisabled;
+  const classListMethod = isPageDisabled ? `add` : `remove`;
+  Array.from(formNode.children).forEach((child) => {
+    child.disabled = isPageDisabled;
+    child.classList[classListMethod](`disable-cursor`);
   });
-  Array.from(formFiltersNode.children).forEach((children) => {
-    children.disabled = pageIsActive;
-    children.classList.toggle(`disable-cursor`);
+  Array.from(formFiltersNode.children).forEach((child) => {
+    child.disabled = isPageDisabled;
+    child.classList[classListMethod](`disable-cursor`);
   });
 };
 
@@ -177,20 +194,6 @@ const createPin = (array) => {
   return pinElement;
 };
 
-const createNodeFragment = (pin) => {
-  const fragment = document.createDocumentFragment();
-
-  for (let i = 0; i < pin.length; i++) {
-    fragment.appendChild(createPin(pin[i]));
-  }
-
-  return fragment;
-};
-
-const addNodeFragment = (element) => {
-  mapPinsNode.appendChild(element);
-};
-/*
 const createCard = (dataObject) => {
   const cardElement = mapCardTemplate.cloneNode(true);
   cardElement.querySelector(`.popup__title`).textContent = dataObject.offer.title;
@@ -227,13 +230,22 @@ const createCard = (dataObject) => {
   return cardElement;
 };
 
-const createCardFragment = (cardObj) => {
+const createNodeFragment = (pin) => {
+  const fragment = document.createDocumentFragment();
+
+  for (let i = 0; i < pin.length; i++) {
+    fragment.appendChild(createPin(pin[i]));
+  }
+
+  return fragment;
+};
+
+const createСardFragment = (cardObj) => {
   const cardFragment = document.createDocumentFragment();
   cardFragment.appendChild(createCard(cardObj));
-
   return cardFragment;
 };
-*/
+
 const getMainMapPinCoordinateX = () => {
   return parseInt(mapPinMain.style.left, 10) + (MAIN_PIN_WIDTH / 2);
 };
@@ -246,13 +258,11 @@ const passAddressInput = () => {
   formNode.address.value = `${getMainMapPinCoordinateX()}, ${getMainMapPinCoordinateY()}`;
 };
 
+const pinsDataArray = createDataArray(PINS_AMOUNT);
+
 const initPinsScreen = () => {
-  const pinsDataArray = createDataArray(PINS_AMOUNT);
   const pinsNodesFragment = createNodeFragment(pinsDataArray);
-  addNodeFragment(pinsNodesFragment);
-  // const cardNodesFragment = createCardFragment(pinsDataArray[0]);
-  // mapNode.insertBefore(cardNodesFragment, mapFilterContainerNode);
-  // activeModeOn(mapNode);
+  mapPinsNode.appendChild(pinsNodesFragment);
 };
 
 const validateRoomsInput = () => {
@@ -261,27 +271,103 @@ const validateRoomsInput = () => {
   return validateRooms;
 };
 
+const validatePriceInput = () => {
+  formNode.price.min = PRICE[formNode.type.value];
+  formNode.price.placeholder = PRICE[formNode.type.value];
+};
+
+const validateTimeSelects = (evt) => {
+  if (evt.target === formNode.timein) {
+    formNode.timeout.value = formNode.timein.value;
+  } else {
+    formNode.timein.value = formNode.timeout.value;
+  }
+};
+
+const validateTitleInput = () => {
+  const valueLength = formNode.title.value.length;
+
+  if (valueLength < TitleLength.MIN) {
+    formNode.title.setCustomValidity(`Ещё ${TitleLength.MIN - valueLength} символа(ов).`);
+  } else if (valueLength > TitleLength.MAX) {
+    formNode.title.setCustomValidity(`Удалите лишние ${valueLength - TitleLength.MAX} символа(ов).`);
+  } else {
+    formNode.title.setCustomValidity(``);
+  }
+  formNode.title.reportValidity();
+};
+
+const onFormNodeChange = (evt) => {
+  switch (evt.target) {
+    case formNode.title:
+      validateTitleInput();
+      break;
+    case formNode.rooms:
+    case formNode.capacity:
+      validateRoomsInput();
+      break;
+    case formNode.timein:
+    case formNode.timeout:
+      validateTimeSelects(evt);
+      break;
+    case formNode.type:
+      validatePriceInput();
+      break;
+  }
+};
+
 toggleDisabledOnFormNodes();
 passAddressInput();
 
-mapPinMain.addEventListener(`mousedown`, function (evt) {
-  if (evt.button === 0) {
+let cardNode;
+
+const removeActiveCard = () => {
+  cardNode.parentNode.removeChild(cardNode);
+  document.removeEventListener(`keydown`, onPopupEscPress);
+};
+
+const onPopupEscPress = (evt) => {
+  if (evt.key === KeyboardKeys.ESCAPE) {
+    evt.preventDefault();
+    removeActiveCard();
+  }
+};
+/*
+const renderPinsAndRemoveHandler = (evt) => {
+  if (evt.button === MouseKeys.LEFT_CLICK_MOUSE || evt.key === KeyboardKeys.ENTER) {
     onActiveMode();
     initPinsScreen();
+    mapPinMain.removeEventListener(`mousedown`, renderPinsAndRemoveHandler);
+    mapPinMain.removeEventListener(`keydown`, renderPinsAndRemoveHandler);
   }
+};
+
+mapPinMain.addEventListener(`mousedown`, renderPinsAndRemoveHandler);
+mapPinMain.addEventListener(`keydown`, renderPinsAndRemoveHandler);
+*/
+mapPinMain.addEventListener(`click`, function () {
+  onActiveMode();
+  initPinsScreen();
+
+  let pinsArr = Array.from(mapPinsNode.querySelectorAll(`.map__pin:not(.map__pin--main)`));
+
+  pinsArr.forEach((element, index) => {
+    element.addEventListener(`click`, () => {
+      cardNode = mapNode.querySelector(`.map__card`);
+      if (cardNode) {
+        removeActiveCard();
+      }
+      const cardNodesFragment = createСardFragment(pinsDataArray[index]);
+      mapNode.insertBefore(cardNodesFragment, mapFilterContainerNode);
+      cardNode = mapNode.querySelector(`.map__card`);
+      const closeButton = cardNode.querySelector(`.popup__close`);
+      closeButton.addEventListener(`click`, removeActiveCard);
+      document.addEventListener(`keydown`, onPopupEscPress);
+    });
+  });
 }, {
   once: true
 });
 
-mapPinMain.addEventListener(`keydown`, function (evt) {
-  if (evt.key === KeyboardKeys.ENTER) {
-    onActiveMode();
-    initPinsScreen();
-  }
-}, {
-  once: true
-});
 
-formNode.capacity.addEventListener(`input`, validateRoomsInput);
-formNode.rooms.addEventListener(`input`, validateRoomsInput);
-formSubmit.addEventListener(`click`, validateRoomsInput);
+formNode.addEventListener(`change`, onFormNodeChange);
