@@ -345,7 +345,7 @@ const renderPinsAndRemoveHandler = (evt) => {
 mapPinMain.addEventListener(`mousedown`, renderPinsAndRemoveHandler);
 mapPinMain.addEventListener(`keydown`, renderPinsAndRemoveHandler);
 */
-mapPinMain.addEventListener(`click`, function () {
+const renderCard = () => {
   onActiveMode();
   initPinsScreen();
 
@@ -365,9 +365,7 @@ mapPinMain.addEventListener(`click`, function () {
       document.addEventListener(`keydown`, onPopupEscPress);
     });
   });
-}, {
-  once: true
-});
+};
 
-
+mapPinMain.addEventListener(`click`, renderCard);
 formNode.addEventListener(`change`, onFormNodeChange);
