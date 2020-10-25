@@ -90,6 +90,7 @@ const formNode = document.querySelector(`.ad-form`);
 // const formSubmit = formNode.querySelector(`.ad-form__submit`);
 
 const PINS_AMOUNT = 8;
+const MAX_PRICE_PER_NIGHT = 1000000;
 const MAX_PRICE = 10000;
 const MIN_PRICE = 1000;
 const PIN_WIDTH = 50;
@@ -277,12 +278,17 @@ const initPinsScreen = () => {
 const validateRoomsInput = () => {
   const validateRooms = ROOMS_FOR_GUESTS[formNode.rooms.value].includes(formNode.capacity.value) ? formNode.capacity.setCustomValidity(``) : formNode.capacity.setCustomValidity(`Не возможно выбрать данное количество гостей`);
   formNode.capacity.reportValidity();
+
   return validateRooms;
 };
 
 const validatePriceInput = () => {
   formNode.price.min = PRICE[formNode.type.value];
   formNode.price.placeholder = PRICE[formNode.type.value];
+};
+
+const validateMaxPriceInput = () => {
+  formNode.price.setAttribute(`max`, MAX_PRICE_PER_NIGHT);
 };
 
 const validateTimeSelects = (evt) => {
@@ -327,6 +333,7 @@ const onFormNodeChange = (evt) => {
 
 toggleDisabledOnFormNodes();
 passAddressInputCenter();
+validateMaxPriceInput();
 
 let cardNode;
 
