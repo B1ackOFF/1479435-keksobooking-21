@@ -251,11 +251,20 @@ const getMainMapPinCoordinateX = () => {
 };
 
 const getMainMapPinCoordinateY = () => {
-  return parseInt(mapPinMain.style.top, 10) + (MAIN_PIN_HEIGHT) + (PSEUDO_ELEMENT_PIN_HEIGHT / 2);
+  return parseInt(mapPinMain.style.top, 10) + (MAIN_PIN_HEIGHT) + (PSEUDO_ELEMENT_PIN_HEIGHT);
 };
 
 const passAddressInput = () => {
   formNode.address.value = `${getMainMapPinCoordinateX()}, ${getMainMapPinCoordinateY()}`;
+  formNode.address.disabled = true;
+};
+
+const getCenterMainMapPinCoordinateY = () => {
+  return parseInt(mapPinMain.style.top, 10) + (MAIN_PIN_HEIGHT / 2);
+};
+
+const passAddressInputCenter = () => {
+  formNode.address.value = `${getMainMapPinCoordinateX()}, ${getCenterMainMapPinCoordinateY()}`;
 };
 
 const pinsDataArray = createDataArray(PINS_AMOUNT);
@@ -317,7 +326,7 @@ const onFormNodeChange = (evt) => {
 };
 
 toggleDisabledOnFormNodes();
-passAddressInput();
+passAddressInputCenter();
 
 let cardNode;
 
@@ -348,6 +357,7 @@ mapPinMain.addEventListener(`keydown`, renderPinsAndRemoveHandler);
 const renderCard = () => {
   onActiveMode();
   initPinsScreen();
+  passAddressInput();
 
   let pinsArr = Array.from(mapPinsNode.querySelectorAll(`.map__pin:not(.map__pin--main)`));
 
@@ -365,6 +375,7 @@ const renderCard = () => {
       document.addEventListener(`keydown`, onPopupEscPress);
     });
   });
+  mapPinMain.removeEventListener(`click`, renderCard);
 };
 
 mapPinMain.addEventListener(`click`, renderCard);
