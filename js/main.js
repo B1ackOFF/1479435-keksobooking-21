@@ -87,10 +87,9 @@ const mapFilterContainerNode = mapNode.querySelector(`.map__filters-container`);
 const formFiltersNode = mapFilterContainerNode.querySelector(`.map__filters`);
 const mapPinMain = document.querySelector(`.map__pin--main`);
 const formNode = document.querySelector(`.ad-form`);
-// const formSubmit = formNode.querySelector(`.ad-form__submit`);
 
 const PINS_AMOUNT = 8;
-const MAX_PRICE_PER_NIGHT = 1000000;
+// const MAX_PRICE_PER_NIGHT = 1000000;
 const MAX_PRICE = 10000;
 const MIN_PRICE = 1000;
 const PIN_WIDTH = 50;
@@ -105,11 +104,6 @@ const MAIN_PIN_WIDTH = 62;
 const MAIN_PIN_HEIGHT = 62;
 const PSEUDO_ELEMENT_PIN_HEIGHT = 22;
 
-/*
-const activeModeOn = (element) => {
-  element.classList.remove(`map--faded`);
-};
-*/
 let isPageDisabled = false;
 
 const toggleDisabledOnFormNodes = () => {
@@ -274,23 +268,34 @@ const initPinsScreen = () => {
   const pinsNodesFragment = createNodeFragment(pinsDataArray);
   mapPinsNode.appendChild(pinsNodesFragment);
 };
-
+/*
 const validateRoomsInput = () => {
   const validateRooms = ROOMS_FOR_GUESTS[formNode.rooms.value].includes(formNode.capacity.value) ? formNode.capacity.setCustomValidity(``) : formNode.capacity.setCustomValidity(`Не возможно выбрать данное количество гостей`);
   formNode.capacity.reportValidity();
 
   return validateRooms;
 };
+*/
+const room = document.querySelector(`#room_number`);
+const guest = document.querySelector(`#capacity`);
+
+const changeRoomNumberValue = (value) => {
+  [...guest.options].forEach((option) => {
+    option.disabled = !ROOMS_FOR_GUESTS[value].includes(option.value);
+  });
+  guest.value = value > 3 ? 0 : value;
+};
+changeRoomNumberValue(room.value);
 
 const validatePriceInput = () => {
   formNode.price.min = PRICE[formNode.type.value];
   formNode.price.placeholder = PRICE[formNode.type.value];
 };
-
+/*
 const validateMaxPriceInput = () => {
   formNode.price.setAttribute(`max`, MAX_PRICE_PER_NIGHT);
 };
-
+*/
 const validateTimeSelects = (evt) => {
   if (evt.target === formNode.timein) {
     formNode.timeout.value = formNode.timein.value;
@@ -314,13 +319,10 @@ const validateTitleInput = () => {
 
 const onFormNodeChange = (evt) => {
   switch (evt.target) {
-    case formNode.title:
-      validateTitleInput();
-      break;
-    case formNode.rooms:
+    /* case formNode.rooms:
     case formNode.capacity:
       validateRoomsInput();
-      break;
+      break;*/
     case formNode.timein:
     case formNode.timeout:
       validateTimeSelects(evt);
@@ -331,9 +333,9 @@ const onFormNodeChange = (evt) => {
   }
 };
 
+validatePriceInput();
 toggleDisabledOnFormNodes();
 passAddressInputCenter();
-validateMaxPriceInput();
 
 let cardNode;
 
@@ -385,5 +387,10 @@ const renderCard = () => {
   mapPinMain.removeEventListener(`click`, renderCard);
 };
 
+room.addEventListener(`change`, (evt) => {
+  changeRoomNumberValue(evt.target.value);
+});
 mapPinMain.addEventListener(`click`, renderCard);
+formNode.addEventListener(`input`, validateTitleInput);
 formNode.addEventListener(`change`, onFormNodeChange);
+
