@@ -276,11 +276,13 @@ const validateRoomsInput = () => {
   return validateRooms;
 };
 */
+// const guest1 = document.querySelector(`#capacity`);
+// console.log([...guest1.options]);
 const room = document.querySelector(`#room_number`);
 const guest = document.querySelector(`#capacity`);
 
 const changeRoomNumberValue = (value) => {
-  [...guest.options].forEach((option) => {
+  Array.from(guest.options).forEach((option) => {
     option.disabled = !ROOMS_FOR_GUESTS[value].includes(option.value);
   });
   guest.value = value > 3 ? 0 : value;
