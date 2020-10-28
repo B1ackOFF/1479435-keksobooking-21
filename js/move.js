@@ -1,9 +1,29 @@
 "use strict";
 
 (()=> {
-  const dialogHandle = window.pin.mapPinsNode.querySelector(`.map__pin--main`);
+  const MainPinSize = {
+    circle: {
+      WIDTH: 62,
+      HEIGHT: 62
+    },
+    pin: {
+      WIDTH: 62,
+      HEIGHT: 84
+    }
+  };
 
-  dialogHandle.addEventListener(`mousedown`, function (evt) {
+  const Coordinates = {
+    Y: {
+      MAX: 630 - MainPinSize.pin.HEIGHT,
+      MIN: 130 - MainPinSize.pin.HEIGHT
+    },
+    X: {
+      MAX: window.pin.mapNode.offsetWidth - (MainPinSize.pin.WIDTH / 2),
+      MIN: -(MainPinSize.pin.WIDTH / 2)
+    }
+  };
+
+  window.map.mapPinMain.addEventListener(`mousedown`, function (evt) {
     evt.preventDefault();
 
     let startCoords = {
@@ -19,13 +39,24 @@
         y: startCoords.y - moveEvt.clientY
       };
 
+      const CoordinatesMainPin = {
+        x: window.map.mapPinMain.offsetLeft - shift.x,
+        y: window.map.mapPinMain.offsetTop - shift.y
+      };
+
       startCoords = {
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
 
-      dialogHandle.style.top = (dialogHandle.offsetTop - shift.y) + `px`;
-      dialogHandle.style.left = (dialogHandle.offsetLeft - shift.x) + `px`;
+      if (CoordinatesMainPin.x >= Coordinates.X.MIN && CoordinatesMainPin.x <= Coordinates.X.MAX) {
+        window.map.mapPinMain.style.left = `${CoordinatesMainPin.x}px`;
+      }
+
+      if (CoordinatesMainPin.y >= Coordinates.Y.MIN && CoordinatesMainPin.y <= Coordinates.Y.MAX) {
+        window.map.mapPinMain.style.top = `${CoordinatesMainPin.y}px`;
+      }
+
       window.form.passAddressInput();
     };
 
