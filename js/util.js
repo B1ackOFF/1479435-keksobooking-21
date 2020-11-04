@@ -35,6 +35,12 @@
         window.map.removeActiveCard();
       }
     },
+    onPopupMessageEscPress: (evt) => {
+      if (evt.key === KeyboardKeys.ESCAPE) {
+        evt.preventDefault();
+        window.reset.removeMessageElement();
+      }
+    },
     MouseButtons,
     KeyboardKeys
   };
