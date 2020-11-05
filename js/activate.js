@@ -44,7 +44,7 @@
   const onPinMainClickOrEnterPress = (evt) => {
     if (evt.button === window.util.MouseButtons.MAIN || evt.key === window.util.KeyboardKeys.ENTER) {
       evt.preventDefault();
-      window.data.load(onActiveMode);
+      window.backend.load(onActiveMode);
       window.map.mapPinMain.removeEventListener(`mousedown`, onPinMainClickOrEnterPress);
       window.map.mapPinMain.removeEventListener(`keydown`, onPinMainClickOrEnterPress);
     }

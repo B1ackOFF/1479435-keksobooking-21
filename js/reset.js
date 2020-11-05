@@ -2,6 +2,10 @@
 (() => {
   const mainNode = document.querySelector(`main`);
   const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+  const startingPositionMapPinMain = {
+    axisX: `570px`,
+    axisY: `375px`,
+  };
 
   const createMessageElement = () => {
     const successMessageElement = successMessageTemplate.cloneNode(true);
@@ -23,7 +27,7 @@
     }
   };
 
-  const page = () => {
+  const resetPage = () => {
     let pinsNode = window.pin.mapPinsNode.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
     window.pin.mapNode.classList.add(`map--faded`);
@@ -37,8 +41,8 @@
 
     window.form.formNode.reset();
 
-    window.map.mapPinMain.style.left = `570px`;
-    window.map.mapPinMain.style.top = `375px`;
+    window.map.mapPinMain.style.left = startingPositionMapPinMain.axisX;
+    window.map.mapPinMain.style.top = startingPositionMapPinMain.axisY;
     window.form.passAddressInput(window.move.MainPinSize.circle.WIDTH, window.move.MainPinSize.circle.HEIGHT);
 
     window.map.removeActiveCard();
@@ -48,7 +52,7 @@
   };
 
   window.reset = {
-    page,
+    resetPage,
     removeMessageElement,
     mainNode,
     createMessageElement

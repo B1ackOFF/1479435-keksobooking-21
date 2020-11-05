@@ -100,13 +100,13 @@
   });
 
   formNode.addEventListener(`submit`, (evt) => {
-    window.data.upload(new FormData(formNode), window.reset.page);
+    window.backend.upload(new FormData(formNode), window.reset.page);
     window.reset.createMessageElement();
     evt.preventDefault();
   });
 
   formResetButton.addEventListener(`click`, (evt) => {
-    window.reset.page();
+    window.reset.resetPage();
     evt.preventDefault();
   });
 
