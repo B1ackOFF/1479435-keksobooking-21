@@ -100,7 +100,7 @@
   });
 
   formNode.addEventListener(`submit`, (evt) => {
-    window.backend.upload(new FormData(formNode), window.reset.page);
+    window.backend.upload(new FormData(formNode), window.reset.resetPage);
     window.reset.createMessageElement();
     evt.preventDefault();
   });
