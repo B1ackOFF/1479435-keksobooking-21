@@ -70,4 +70,8 @@
     window.pin.mapPinsNode.addEventListener(`mousemove`, onMouseMove);
     window.pin.mapPinsNode.addEventListener(`mouseup`, onMouseUp);
   });
+
+  window.move = {
+    MainPinSize
+  };
 })();

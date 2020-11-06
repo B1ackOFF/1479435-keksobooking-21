@@ -4,8 +4,8 @@
   window.map = {
     mapPinMain: document.querySelector(`.map__pin--main`),
 
-    initPinsScreen: () => {
-      const pinsNodesFragment = window.pin.createNodeFragment(window.data.pinsDataArray);
+    initPinsScreen: (array) => {
+      const pinsNodesFragment = window.pin.createNodeFragment(array);
       window.pin.mapPinsNode.appendChild(pinsNodesFragment);
     },
 

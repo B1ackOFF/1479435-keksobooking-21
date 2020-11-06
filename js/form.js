@@ -21,6 +21,7 @@
   const MAIN_PIN_HEIGHT = 62;
   const PSEUDO_ELEMENT_PIN_HEIGHT = 22;
   const formNode = document.querySelector(`.ad-form`);
+  const formResetButton = formNode.querySelector(`.ad-form__reset`);
   const room = document.querySelector(`#room_number`);
   const guest = document.querySelector(`#capacity`);
 
@@ -38,6 +39,10 @@
 
   const passAddressInputCenter = () => {
     formNode.address.value = `${getMainMapPinCoordinateX()}, ${getCenterMainMapPinCoordinateY()}`;
+  };
+  const passAddressInput = (pinWidth, pinHeight) => {
+    window.form.formNode.address.value = `${getMainMapPinCoordinateX(pinWidth)}, ${getMainMapPinCoordinateY(pinHeight)}`;
+    window.form.formNode.address.disabled = true;
   };
   const changeRoomNumberValue = (value) => {
     Array.from(guest.options).forEach((option) => {
@@ -94,11 +99,19 @@
     changeRoomNumberValue(evt.target.value);
   });
 
+  formNode.addEventListener(`submit`, (evt) => {
+    window.backend.upload(new FormData(formNode), window.reset.resetPage);
+    window.reset.createMessageElement();
+    evt.preventDefault();
+  });
+
+  formResetButton.addEventListener(`click`, (evt) => {
+    window.reset.resetPage();
+    evt.preventDefault();
+  });
+
   window.form = {
-    formNode: document.querySelector(`.ad-form`),
-    passAddressInput: () => {
-      window.form.formNode.address.value = `${getMainMapPinCoordinateX()}, ${getMainMapPinCoordinateY()}`;
-      window.form.formNode.address.disabled = true;
-    }
+    formNode,
+    passAddressInput
   };
 })();
