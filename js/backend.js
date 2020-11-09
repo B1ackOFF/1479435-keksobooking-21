@@ -48,7 +48,8 @@
     upload: (data, onSuccess) => {
       workWithServer(`POST`, Url.UPLOAD, onSuccess, data);
     },
-    showError
+    showError,
+    StatusCode
   };
   /*
   const TITLES = [

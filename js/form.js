@@ -42,7 +42,7 @@
   };
   const passAddressInput = (pinWidth, pinHeight) => {
     window.form.formNode.address.value = `${getMainMapPinCoordinateX(pinWidth)}, ${getMainMapPinCoordinateY(pinHeight)}`;
-    window.form.formNode.address.disabled = true;
+    window.form.formNode.address.readOnly = true;
   };
   const changeRoomNumberValue = (value) => {
     Array.from(guest.options).forEach((option) => {

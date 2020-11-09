@@ -28,18 +28,15 @@
   };
 
   const resetPage = () => {
-    let pinsNode = window.pin.mapPinsNode.querySelectorAll(`.map__pin:not(.map__pin--main)`);
-
     window.pin.mapNode.classList.add(`map--faded`);
     window.form.formNode.classList.add(`ad-form--disabled`);
 
     window.activate.toggleDisabledOnFormNodes();
 
-    for (let pinNode of pinsNode) {
-      pinNode.parentNode.removeChild(pinNode);
-    }
+    window.pin.removePins();
 
     window.form.formNode.reset();
+    window.activate.formFiltersNode.reset();
 
     window.map.mapPinMain.style.left = startingPositionMapPinMain.axisX;
     window.map.mapPinMain.style.top = startingPositionMapPinMain.axisY;

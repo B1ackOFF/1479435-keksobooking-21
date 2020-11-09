@@ -18,16 +18,28 @@
     return pinElement;
   };
 
+  const createNodeFragment = (pin) => {
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < pin.length; i++) {
+      fragment.appendChild(createPin(pin[i]));
+    }
+    return fragment;
+  };
+
+  const removePins = () => {
+    let pinsNode = window.pin.mapPinsNode.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    for (let pinNode of pinsNode) {
+      pinNode.parentNode.removeChild(pinNode);
+    }
+  };
+
   window.pin = {
     mapNode: document.querySelector(`.map`),
     mapPinsNode: mapNode.querySelector(`.map__pins`),
-    createNodeFragment: (pin) => {
-      const fragment = document.createDocumentFragment();
+    createNodeFragment,
+    removePins
 
-      for (let i = 0; i < pin.length; i++) {
-        fragment.appendChild(createPin(pin[i]));
-      }
-      return fragment;
-    }
+
   };
 })();
