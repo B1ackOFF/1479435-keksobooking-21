@@ -20,16 +20,16 @@
   };
 
   const onActiveMode = (array) => {
-    const simillarPinsArray = array;
+    //  const simillarPinsArray = array.concat();
     window.pin.mapNode.classList.remove(`map--faded`);
     window.form.formNode.classList.remove(`ad-form--disabled`);
     toggleDisabledOnFormNodes();
     window.form.passAddressInput(window.move.MainPinSize.pin.WIDTH, window.move.MainPinSize.pin.HEIGHT);
     window.map.initPinsScreen(array);
 
-    window.filter.updateSimillarPins(simillarPinsArray);
+    window.filter.updateSimillarPins(array);
     const filterPins = window.debounce.debounce(() => {
-      window.filter.updateSimillarPins(simillarPinsArray);
+      window.filter.updateSimillarPins(array);
     });
     formFiltersNode.addEventListener(`change`, filterPins);
   };

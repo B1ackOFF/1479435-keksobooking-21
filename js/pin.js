@@ -28,7 +28,7 @@
   };
 
   const removePins = () => {
-    let pinsNode = window.pin.mapPinsNode.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    const pinsNode = window.pin.mapPinsNode.querySelectorAll(`.map__pin:not(.map__pin--main)`);
     for (let pinNode of pinsNode) {
       pinNode.parentNode.removeChild(pinNode);
     }
