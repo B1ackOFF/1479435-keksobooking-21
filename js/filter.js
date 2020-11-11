@@ -13,10 +13,10 @@
   const checkBoxes = Array.from(window.activate.formFiltersNode.features);
 
   const updateSimillarPins = (array) => {
-
+    const simillarPinsArray = array.concat();
     const filterPinsByType = (pinSimmillar) => {
       if (window.activate.formFiltersNode[`housing-type`].value === FILTER_DEFAULT_VALUE) {
-        return array;
+        return simillarPinsArray;
       } else {
         return pinSimmillar.offer.type === window.activate.formFiltersNode[`housing-type`].value;
       }
@@ -24,7 +24,7 @@
 
     const filterPinsByRooms = (pinSimmillar) => {
       if (window.activate.formFiltersNode[`housing-rooms`].value === FILTER_DEFAULT_VALUE) {
-        return array;
+        return simillarPinsArray;
       } else {
         return parseInt(pinSimmillar.offer[`rooms`], 10) === parseInt(window.activate.formFiltersNode[`housing-rooms`].value, 10);
       }
@@ -32,7 +32,7 @@
 
     const filterPinsByGuests = (pinSimmillar) => {
       if (window.activate.formFiltersNode[`housing-guests`].value === FILTER_DEFAULT_VALUE) {
-        return array;
+        return simillarPinsArray;
       } else {
         return parseInt(pinSimmillar.offer[`guests`], 10) === parseInt(window.activate.formFiltersNode[`housing-guests`].value, 10);
       }
@@ -47,7 +47,7 @@
         case `high`:
           return pinSimmillar.offer.price > RoomPrice.high;
         default:
-          return array;
+          return simillarPinsArray;
       }
     };
 
@@ -57,7 +57,7 @@
       });
     };
 
-    const newArray = array.filter(filterPinsByType)
+    const newArray = simillarPinsArray.filter(filterPinsByType)
     .filter(filterPinsByRooms)
     .filter(filterPinsByGuests)
     .filter(filterPinsByPrice)
