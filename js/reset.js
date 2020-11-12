@@ -44,6 +44,10 @@ const resetPage = () => {
 
   window.map.removeActiveCard();
 
+  window.images.previewHousing.classList.add(`hidden`);
+  window.images.previewHousing.src = ``;
+  window.images.previewAvatar.src = `img/muffin-grey.svg`;
+
   window.map.mapPinMain.addEventListener(`mousedown`, window.activate.onPinMainClickOrEnterPress);
   window.map.mapPinMain.addEventListener(`keydown`, window.activate.onPinMainClickOrEnterPress);
 };
