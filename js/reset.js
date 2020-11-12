@@ -1,57 +1,56 @@
 "use strict";
-(() => {
-  const mainNode = document.querySelector(`main`);
-  const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
-  const startingPositionMapPinMain = {
-    axisX: `570px`,
-    axisY: `375px`,
-  };
 
-  const createMessageElement = () => {
-    const successMessageElement = successMessageTemplate.cloneNode(true);
-    mainNode.appendChild(successMessageElement);
+const mainNode = document.querySelector(`main`);
+const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+const startingPositionMapPinMain = {
+  axisX: `570px`,
+  axisY: `375px`,
+};
 
-    document.addEventListener(`keydown`, window.util.onPopupMessageEscPress);
-    successMessageElement.addEventListener(`click`, removeMessageElement);
-  };
+const createMessageElement = () => {
+  const successMessageElement = successMessageTemplate.cloneNode(true);
+  mainNode.appendChild(successMessageElement);
 
-  const removeMessageElement = () => {
-    const succesMessageElement = mainNode.querySelector(`.success`);
-    const errorMessageElement = mainNode.querySelector(`.error`);
-    if (succesMessageElement) {
-      succesMessageElement.parentNode.removeChild(succesMessageElement);
-      document.removeEventListener(`keydown`, window.util.onPopupMessageEscPress);
-    } else {
-      errorMessageElement.parentNode.removeChild(errorMessageElement);
-      document.removeEventListener(`keydown`, window.util.onPopupMessageEscPress);
-    }
-  };
+  document.addEventListener(`keydown`, window.util.onPopupMessageEscPress);
+  successMessageElement.addEventListener(`click`, removeMessageElement);
+};
 
-  const resetPage = () => {
-    window.pin.mapNode.classList.add(`map--faded`);
-    window.form.formNode.classList.add(`ad-form--disabled`);
+const removeMessageElement = () => {
+  const succesMessageElement = mainNode.querySelector(`.success`);
+  const errorMessageElement = mainNode.querySelector(`.error`);
+  if (succesMessageElement) {
+    succesMessageElement.parentNode.removeChild(succesMessageElement);
+    document.removeEventListener(`keydown`, window.util.onPopupMessageEscPress);
+  } else {
+    errorMessageElement.parentNode.removeChild(errorMessageElement);
+    document.removeEventListener(`keydown`, window.util.onPopupMessageEscPress);
+  }
+};
 
-    window.activate.toggleDisabledOnFormNodes();
+const resetPage = () => {
+  window.pin.mapNode.classList.add(`map--faded`);
+  window.form.formNode.classList.add(`ad-form--disabled`);
 
-    window.pin.removePins();
+  window.activate.toggleDisabledOnFormNodes();
 
-    window.form.formNode.reset();
-    window.activate.formFiltersNode.reset();
+  window.pin.removePins();
 
-    window.map.mapPinMain.style.left = startingPositionMapPinMain.axisX;
-    window.map.mapPinMain.style.top = startingPositionMapPinMain.axisY;
-    window.form.passAddressInput(window.move.MainPinSize.circle.WIDTH, window.move.MainPinSize.circle.HEIGHT);
+  window.form.formNode.reset();
+  window.activate.formFiltersNode.reset();
 
-    window.map.removeActiveCard();
+  window.map.mapPinMain.style.left = startingPositionMapPinMain.axisX;
+  window.map.mapPinMain.style.top = startingPositionMapPinMain.axisY;
+  window.form.passAddressInput(window.move.MainPinSize.circle.WIDTH, window.move.MainPinSize.circle.HEIGHT);
 
-    window.map.mapPinMain.addEventListener(`mousedown`, window.activate.onPinMainClickOrEnterPress);
-    window.map.mapPinMain.addEventListener(`keydown`, window.activate.onPinMainClickOrEnterPress);
-  };
+  window.map.removeActiveCard();
 
-  window.reset = {
-    resetPage,
-    removeMessageElement,
-    mainNode,
-    createMessageElement
-  };
-})();
+  window.map.mapPinMain.addEventListener(`mousedown`, window.activate.onPinMainClickOrEnterPress);
+  window.map.mapPinMain.addEventListener(`keydown`, window.activate.onPinMainClickOrEnterPress);
+};
+
+window.reset = {
+  resetPage,
+  removeMessageElement,
+  mainNode,
+  createMessageElement
+};
