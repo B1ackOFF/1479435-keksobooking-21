@@ -5,13 +5,14 @@ module.exports = {
     "./js/util.js",
     "./js/pin.js",
     "./js/map.js",
+    "./js/move.js",
     "./js/activate.js",
     "./js/backend.js",
     "./js/filter.js",
     "./js/card.js",
-    "./js/move.js",
     "./js/reset.js",
-    "./js/images.js"
+    "./js/images.js",
+    "./js/form.js"
   ],
   output: {
     filename: "bundle.js",
