@@ -1,28 +1,27 @@
 "use strict";
 
-const MainPinSize = {
-  circle: {
+const mainPinSize = {
+  CIRCLE: {
     WIDTH: 62,
     HEIGHT: 62
   },
-  pin: {
+  PIN: {
     WIDTH: 62,
     HEIGHT: 84
   }
 };
-
-const Coordinates = {
+const coordinates = {
   Y: {
-    MAX: 630 - MainPinSize.pin.HEIGHT,
-    MIN: 130 - MainPinSize.pin.HEIGHT
+    MAX: 630 - mainPinSize.PIN.HEIGHT,
+    MIN: 130 - mainPinSize.PIN.HEIGHT
   },
   X: {
-    MAX: window.pin.mapNode.offsetWidth - (MainPinSize.pin.WIDTH / 2),
-    MIN: -(MainPinSize.pin.WIDTH / 2)
+    MAX: window.pin.mapNode.offsetWidth - (mainPinSize.PIN.WIDTH / 2),
+    MIN: -(mainPinSize.PIN.WIDTH / 2)
   }
 };
 
-window.map.mapPinMain.addEventListener(`mousedown`, function (evt) {
+window.map.pinMain.addEventListener(`mousedown`, (evt) => {
   evt.preventDefault();
 
   let startCoords = {
@@ -30,7 +29,7 @@ window.map.mapPinMain.addEventListener(`mousedown`, function (evt) {
     y: evt.clientY
   };
 
-  const onMouseMove = function (moveEvt) {
+  const onMouseMove = (moveEvt) => {
     moveEvt.preventDefault();
 
     let shift = {
@@ -38,9 +37,9 @@ window.map.mapPinMain.addEventListener(`mousedown`, function (evt) {
       y: startCoords.y - moveEvt.clientY
     };
 
-    const CoordinatesMainPin = {
-      x: window.map.mapPinMain.offsetLeft - shift.x,
-      y: window.map.mapPinMain.offsetTop - shift.y
+    const coordinatesMainPin = {
+      x: window.map.pinMain.offsetLeft - shift.x,
+      y: window.map.pinMain.offsetTop - shift.y
     };
 
     startCoords = {
@@ -48,28 +47,28 @@ window.map.mapPinMain.addEventListener(`mousedown`, function (evt) {
       y: moveEvt.clientY
     };
 
-    if (CoordinatesMainPin.x >= Coordinates.X.MIN && CoordinatesMainPin.x <= Coordinates.X.MAX) {
-      window.map.mapPinMain.style.left = `${CoordinatesMainPin.x}px`;
+    if (coordinatesMainPin.x >= coordinates.X.MIN && coordinatesMainPin.x <= coordinates.X.MAX) {
+      window.map.pinMain.style.left = `${coordinatesMainPin.x}px`;
     }
 
-    if (CoordinatesMainPin.y >= Coordinates.Y.MIN && CoordinatesMainPin.y <= Coordinates.Y.MAX) {
-      window.map.mapPinMain.style.top = `${CoordinatesMainPin.y}px`;
+    if (coordinatesMainPin.y >= coordinates.Y.MIN && coordinatesMainPin.y <= coordinates.Y.MAX) {
+      window.map.pinMain.style.top = `${coordinatesMainPin.y}px`;
     }
 
     window.form.passAddressInput();
   };
 
-  const onMouseUp = function (upEvt) {
+  const onMouseUp = (upEvt) => {
     upEvt.preventDefault();
 
     window.pin.mapPinsNode.removeEventListener(`mousemove`, onMouseMove);
-    window.pin.mapPinsNode.removeEventListener(`mouseup`, onMouseUp);
+    document.removeEventListener(`mouseup`, onMouseUp);
   };
 
   window.pin.mapPinsNode.addEventListener(`mousemove`, onMouseMove);
-  window.pin.mapPinsNode.addEventListener(`mouseup`, onMouseUp);
+  document.addEventListener(`mouseup`, onMouseUp);
 });
 
 window.move = {
-  MainPinSize
+  mainPinSize
 };

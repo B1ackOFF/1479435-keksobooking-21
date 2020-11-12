@@ -1,13 +1,12 @@
 "use strict";
 
-const RoomPrice = {
-  low: 10000,
-  high: 50000
-};
-
 const MAX_SIMILLAR_PINS_COUNT = 5;
 const FILTER_DEFAULT_VALUE = `any`;
 const checkBoxes = Array.from(window.activate.formFiltersNode.features);
+const roomPrice = {
+  LOW: 10000,
+  HIGH: 50000
+};
 
 const updateSimillarPins = (array) => {
   const simillarPinsArray = array.concat();
@@ -38,11 +37,11 @@ const updateSimillarPins = (array) => {
   const filterPinsByPrice = (pinSimmillar) => {
     switch (window.activate.formFiltersNode[`housing-price`].value) {
       case `low`:
-        return pinSimmillar.offer.price < RoomPrice.low;
+        return pinSimmillar.offer.price < roomPrice.LOW;
       case `middle`:
-        return pinSimmillar.offer.price >= RoomPrice.low && pinSimmillar.offer.price <= RoomPrice.high;
+        return pinSimmillar.offer.price >= roomPrice.LOW && pinSimmillar.offer.price <= roomPrice.HIGH;
       case `high`:
-        return pinSimmillar.offer.price > RoomPrice.high;
+        return pinSimmillar.offer.price > roomPrice.HIGH;
       default:
         return simillarPinsArray;
     }
@@ -54,7 +53,7 @@ const updateSimillarPins = (array) => {
     });
   };
 
-  const newArray = simillarPinsArray.filter(filterPinsByType)
+  const filteredPins = simillarPinsArray.filter(filterPinsByType)
   .filter(filterPinsByRooms)
   .filter(filterPinsByGuests)
   .filter(filterPinsByPrice)
@@ -65,8 +64,8 @@ const updateSimillarPins = (array) => {
 
   window.map.removeActiveCard();
   window.pin.removePins();
-  window.map.initPinsScreen(newArray);
-  window.card.addCardNode(newArray);
+  window.map.initPinsScreen(filteredPins);
+  window.card.addNode(filteredPins);
 };
 
 window.filter = {

@@ -1,5 +1,6 @@
 "use strict";
 
+const TIMEOUT_IN_MS = 10000;
 const Url = {
   LOAD: `https://21.javascript.pages.academy/keksobooking/data`,
   UPLOAD: `https://21.javascript.pages.academy/keksobooking`
@@ -7,8 +8,6 @@ const Url = {
 const StatusCode = {
   ОК: 200
 };
-const TIMEOUT_IN_MS = 10000;
-
 const errorMessageTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
 
 const showError = (message) => {
@@ -41,13 +40,17 @@ const workWithServer = (method, dataUrl, onSuccess, data) => {
   xhr.send(method === `GET` ? `` : data);
 };
 
+const load = (onSuccess) => {
+  workWithServer(`GET`, Url.LOAD, onSuccess);
+};
+
+const upload = (data, onSuccess) => {
+  workWithServer(`POST`, Url.UPLOAD, onSuccess, data);
+};
+
 window.backend = {
-  load: (onSuccess) => {
-    workWithServer(`GET`, Url.LOAD, onSuccess);
-  },
-  upload: (data, onSuccess) => {
-    workWithServer(`POST`, Url.UPLOAD, onSuccess, data);
-  },
+  load,
+  upload,
   showError,
   StatusCode
 };

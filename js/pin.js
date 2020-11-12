@@ -1,11 +1,13 @@
 "use strict";
 
-const mapNode = document.querySelector(`.map`);
-const mapPinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const PIN_WIDTH = 50;
 const PIN_HEIGHT = 70;
 const PINS_DISPLACEMENT_X = PIN_WIDTH / 2;
 const PINS_DISPLACEMENT_Y = PIN_HEIGHT / 2;
+const mapNode = document.querySelector(`.map`);
+const mapPinsNode = mapNode.querySelector(`.map__pins`);
+const mapPinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+
 
 const createPin = (array) => {
   const pinElement = mapPinTemplate.cloneNode(true);
@@ -23,6 +25,7 @@ const createNodeFragment = (pin) => {
   for (let i = 0; i < pin.length; i++) {
     fragment.appendChild(createPin(pin[i]));
   }
+
   return fragment;
 };
 
@@ -34,8 +37,8 @@ const removePins = () => {
 };
 
 window.pin = {
-  mapNode: document.querySelector(`.map`),
-  mapPinsNode: mapNode.querySelector(`.map__pins`),
+  mapNode,
+  mapPinsNode,
   createNodeFragment,
   removePins
 };

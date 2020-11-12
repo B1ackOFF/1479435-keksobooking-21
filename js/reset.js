@@ -3,8 +3,8 @@
 const mainNode = document.querySelector(`main`);
 const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
 const startingPositionMapPinMain = {
-  axisX: `570px`,
-  axisY: `375px`,
+  AXIS_X: `570px`,
+  AXIS_Y: `375px`,
 };
 
 const createMessageElement = () => {
@@ -29,18 +29,18 @@ const removeMessageElement = () => {
 
 const resetPage = () => {
   window.pin.mapNode.classList.add(`map--faded`);
-  window.form.formNode.classList.add(`ad-form--disabled`);
+  window.form.node.classList.add(`ad-form--disabled`);
 
   window.activate.toggleDisabledOnFormNodes();
 
   window.pin.removePins();
 
-  window.form.formNode.reset();
+  window.form.node.reset();
   window.activate.formFiltersNode.reset();
 
-  window.map.mapPinMain.style.left = startingPositionMapPinMain.axisX;
-  window.map.mapPinMain.style.top = startingPositionMapPinMain.axisY;
-  window.form.passAddressInput(window.move.MainPinSize.circle.WIDTH, window.move.MainPinSize.circle.HEIGHT);
+  window.map.pinMain.style.left = startingPositionMapPinMain.AXIS_X;
+  window.map.pinMain.style.top = startingPositionMapPinMain.AXIS_Y;
+  window.form.passAddressInput(window.move.mainPinSize.CIRCLE.WIDTH, window.move.mainPinSize.CIRCLE.HEIGHT);
 
   window.map.removeActiveCard();
 
@@ -48,12 +48,12 @@ const resetPage = () => {
   window.images.previewHousing.src = ``;
   window.images.previewAvatar.src = `img/muffin-grey.svg`;
 
-  window.map.mapPinMain.addEventListener(`mousedown`, window.activate.onPinMainClickOrEnterPress);
-  window.map.mapPinMain.addEventListener(`keydown`, window.activate.onPinMainClickOrEnterPress);
+  window.map.pinMain.addEventListener(`mousedown`, window.activate.onPinMainClickOrEnterPress);
+  window.map.pinMain.addEventListener(`keydown`, window.activate.onPinMainClickOrEnterPress);
 };
 
 window.reset = {
-  resetPage,
+  page: resetPage,
   removeMessageElement,
   mainNode,
   createMessageElement
