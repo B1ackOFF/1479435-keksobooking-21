@@ -6,7 +6,7 @@ const Url = {
   UPLOAD: `https://21.javascript.pages.academy/keksobooking`
 };
 const StatusCode = {
-  ОК: 200
+  OK: 200
 };
 const errorMessageTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
 
@@ -16,14 +16,14 @@ const showError = (message) => {
   window.reset.mainNode.appendChild(errorMessageElement);
 
   document.addEventListener(`keydown`, window.util.onPopupMessageEscPress);
-  errorMessageElement.addEventListener(`click`, window.reset.removeMessageElement);
+  errorMessageElement.addEventListener(`click`, window.reset.removeMessageElementHandler);
 };
 
 const workWithServer = (method, dataUrl, onSuccess, data) => {
   let xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
   xhr.addEventListener(`load`, () => {
-    if (xhr.status === StatusCode.ОК) {
+    if (xhr.status === StatusCode.OK) {
       onSuccess(xhr.response);
     } else {
       showError(`При обращению к серверу произошла ошибка. Статус ответа: ${xhr.status} ${xhr.statusText}. Попробуйте перезагрузить страницу`);

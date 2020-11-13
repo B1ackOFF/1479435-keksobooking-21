@@ -1,21 +1,23 @@
 "use strict";
 
-const mainNode = document.querySelector(`main`);
-const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
-const startingPositionMapPinMain = {
+const DEFAULT_PRICE = 1000;
+const StartingPositionMapPinMain = {
   AXIS_X: `570px`,
   AXIS_Y: `375px`,
 };
+const mainNode = document.querySelector(`main`);
+const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+
 
 const createMessageElement = () => {
   const successMessageElement = successMessageTemplate.cloneNode(true);
   mainNode.appendChild(successMessageElement);
 
   document.addEventListener(`keydown`, window.util.onPopupMessageEscPress);
-  successMessageElement.addEventListener(`click`, removeMessageElement);
+  successMessageElement.addEventListener(`click`, removeMessageElementHandler);
 };
 
-const removeMessageElement = () => {
+const removeMessageElementHandler = () => {
   const succesMessageElement = mainNode.querySelector(`.success`);
   const errorMessageElement = mainNode.querySelector(`.error`);
   if (succesMessageElement) {
@@ -38,11 +40,14 @@ const resetPage = () => {
   window.form.node.reset();
   window.activate.formFiltersNode.reset();
 
-  window.map.pinMain.style.left = startingPositionMapPinMain.AXIS_X;
-  window.map.pinMain.style.top = startingPositionMapPinMain.AXIS_Y;
+  window.form.node.price.placeholder = DEFAULT_PRICE;
+  window.form.node.price.min = DEFAULT_PRICE;
+
+  window.map.pinMain.style.left = StartingPositionMapPinMain.AXIS_X;
+  window.map.pinMain.style.top = StartingPositionMapPinMain.AXIS_Y;
   window.form.passAddressInput(window.move.mainPinSize.CIRCLE.WIDTH, window.move.mainPinSize.CIRCLE.HEIGHT);
 
-  window.map.removeActiveCard();
+  window.map.removeActiveCardHandler();
 
   window.images.previewHousing.classList.add(`hidden`);
   window.images.previewHousing.src = ``;
@@ -54,7 +59,7 @@ const resetPage = () => {
 
 window.reset = {
   page: resetPage,
-  removeMessageElement,
+  removeMessageElementHandler,
   mainNode,
   createMessageElement
 };

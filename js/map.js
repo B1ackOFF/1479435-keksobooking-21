@@ -2,12 +2,12 @@
 
 const mapPinMain = document.querySelector(`.map__pin--main`);
 
-const initPinsScreen = (array) => {
-  const pinsNodesFragment = window.pin.createNodeFragment(array);
+const initPinsScreen = (arrays) => {
+  const pinsNodesFragment = window.pin.createNodeFragment(arrays);
   window.pin.mapPinsNode.appendChild(pinsNodesFragment);
 };
 
-const removeActiveCard = () => {
+const removeActiveCardHandler = () => {
   const cardNode = window.pin.mapNode.querySelector(`.map__card`);
   if (cardNode) {
     cardNode.parentNode.removeChild(cardNode);
@@ -19,5 +19,5 @@ const removeActiveCard = () => {
 window.map = {
   pinMain: mapPinMain,
   initPinsScreen,
-  removeActiveCard
+  removeActiveCardHandler
 };

@@ -9,20 +9,20 @@ const ROOMS_FOR_GUESTS = {
 const MAIN_PIN_WIDTH = 62;
 const MAIN_PIN_HEIGHT = 62;
 const PSEUDO_ELEMENT_PIN_HEIGHT = 22;
-const typeHouse = {
+const TypeHouse = {
   PALACE: `palace`,
   HOUSE: `house`,
   FLAT: `flat`,
   BUNGALOW: `bungalow`
 };
 const Price = {
-  [typeHouse.PALACE]: 10000,
-  [typeHouse.HOUSE]: 5000,
-  [typeHouse.FLAT]: 1000,
-  [typeHouse.BUNGALOW]: 0
+  [TypeHouse.PALACE]: 10000,
+  [TypeHouse.HOUSE]: 5000,
+  [TypeHouse.FLAT]: 1000,
+  [TypeHouse.BUNGALOW]: 0
 };
 
-const titleLength = {
+const TitleLength = {
   MIN: 30,
   MAX: 100
 };
@@ -71,13 +71,13 @@ const validateTimeSelects = (evt) => {
   }
 };
 
-const validateTitleInput = () => {
+const validateTitleInputHandler = () => {
   const valueLength = formNode.title.value.length;
 
-  if (valueLength < titleLength.MIN) {
-    formNode.title.setCustomValidity(`Ещё ${titleLength.MIN - valueLength} символа(ов).`);
-  } else if (valueLength > titleLength.MAX) {
-    formNode.title.setCustomValidity(`Удалите лишние ${valueLength - titleLength.MAX} символа(ов).`);
+  if (valueLength < TitleLength.MIN) {
+    formNode.title.setCustomValidity(`Ещё ${TitleLength.MIN - valueLength} символа(ов).`);
+  } else if (valueLength > TitleLength.MAX) {
+    formNode.title.setCustomValidity(`Удалите лишние ${valueLength - TitleLength.MAX} символа(ов).`);
   } else {
     formNode.title.setCustomValidity(``);
   }
@@ -96,7 +96,7 @@ const onFormNodeChange = (evt) => {
   }
 };
 
-formNode.addEventListener(`input`, validateTitleInput);
+formNode.addEventListener(`input`, validateTitleInputHandler);
 formNode.addEventListener(`change`, onFormNodeChange);
 room.addEventListener(`change`, (evt) => {
   changeRoomNumberValue(evt.target.value);

@@ -19,18 +19,18 @@ const toggleDisabledOnFormNodes = () => {
   });
 };
 
-const onActiveMode = (array) => {
+const onActiveMode = (arrays) => {
   window.pin.mapNode.classList.remove(`map--faded`);
   window.form.node.classList.remove(`ad-form--disabled`);
   toggleDisabledOnFormNodes();
   window.form.passAddressInput(window.move.mainPinSize.PIN.WIDTH, window.move.mainPinSize.PIN.HEIGHT);
-  window.map.initPinsScreen(array);
+  window.map.initPinsScreen(arrays);
 
-  window.filter.updateSimillarPins(array);
-  const filterPins = window.util.debounce(() => {
-    window.filter.updateSimillarPins(array);
+  window.filter.updateSimillarPins(arrays);
+  const filterPinsHandler = window.util.debounce(() => {
+    window.filter.updateSimillarPins(arrays);
   });
-  formFiltersNode.addEventListener(`change`, filterPins);
+  formFiltersNode.addEventListener(`change`, filterPinsHandler);
 };
 
 const onPinMainClickOrEnterPress = (evt) => {

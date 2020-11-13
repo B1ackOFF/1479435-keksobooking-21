@@ -46,13 +46,13 @@ const createCard = (dataObject) => {
   return cardElement;
 };
 
-const createСardFragment = (cardObj) => {
+const createCardFragment = (cardObj) => {
   const fragment = document.createDocumentFragment();
   fragment.appendChild(createCard(cardObj));
   return fragment;
 };
 
-const addCardNode = (array) => {
+const addCardNode = (arrays) => {
   let pins = window.pin.mapPinsNode.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
   pins.forEach((element, index) => {
@@ -62,9 +62,9 @@ const addCardNode = (array) => {
         elem.classList.remove(`.map__pin--active`);
       });
 
-      window.map.removeActiveCard();
-      const cardNodesFragment = createСardFragment(array[index]);
-      cardNodesFragment.querySelector(`.popup__close`).addEventListener(`click`, window.map.removeActiveCard);
+      window.map.removeActiveCardHandler();
+      const cardNodesFragment = createCardFragment(arrays[index]);
+      cardNodesFragment.querySelector(`.popup__close`).addEventListener(`click`, window.map.removeActiveCardHandler);
       document.addEventListener(`keydown`, window.util.onPopupEscPress);
       window.pin.mapNode.insertBefore(cardNodesFragment, window.activate.mapFiltersNode);
       element.classList.add(`.map__pin--active`);
@@ -73,6 +73,5 @@ const addCardNode = (array) => {
 };
 
 window.card = {
-  createFragment: createСardFragment,
   addNode: addCardNode
 };

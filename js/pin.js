@@ -9,22 +9,22 @@ const mapPinsNode = mapNode.querySelector(`.map__pins`);
 const mapPinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
 
-const createPin = (array) => {
+const createPin = (arrays) => {
   const pinElement = mapPinTemplate.cloneNode(true);
-  pinElement.style.left = `${array.location.x - PINS_DISPLACEMENT_X}px`;
-  pinElement.style.top = `${array.location.y - PINS_DISPLACEMENT_Y}px`;
-  pinElement.querySelector(`img`).src = array.author.avatar;
-  pinElement.querySelector(`img`).alt = array.offer.title;
+  pinElement.style.left = `${arrays.location.x - PINS_DISPLACEMENT_X}px`;
+  pinElement.style.top = `${arrays.location.y - PINS_DISPLACEMENT_Y}px`;
+  pinElement.querySelector(`img`).src = arrays.author.avatar;
+  pinElement.querySelector(`img`).alt = arrays.offer.title;
 
   return pinElement;
 };
 
-const createNodeFragment = (pin) => {
+const createNodeFragment = (pins) => {
   const fragment = document.createDocumentFragment();
 
-  for (let i = 0; i < pin.length; i++) {
-    fragment.appendChild(createPin(pin[i]));
-  }
+  pins.forEach((element, index) => {
+    fragment.appendChild(createPin(pins[index]));
+  });
 
   return fragment;
 };

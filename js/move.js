@@ -10,7 +10,7 @@ const mainPinSize = {
     HEIGHT: 84
   }
 };
-const coordinates = {
+const Coordinates = {
   Y: {
     MAX: 630 - mainPinSize.PIN.HEIGHT,
     MIN: 130 - mainPinSize.PIN.HEIGHT
@@ -47,11 +47,11 @@ window.map.pinMain.addEventListener(`mousedown`, (evt) => {
       y: moveEvt.clientY
     };
 
-    if (coordinatesMainPin.x >= coordinates.X.MIN && coordinatesMainPin.x <= coordinates.X.MAX) {
+    if (coordinatesMainPin.x >= Coordinates.X.MIN && coordinatesMainPin.x <= Coordinates.X.MAX) {
       window.map.pinMain.style.left = `${coordinatesMainPin.x}px`;
     }
 
-    if (coordinatesMainPin.y >= coordinates.Y.MIN && coordinatesMainPin.y <= coordinates.Y.MAX) {
+    if (coordinatesMainPin.y >= Coordinates.Y.MIN && coordinatesMainPin.y <= Coordinates.Y.MAX) {
       window.map.pinMain.style.top = `${coordinatesMainPin.y}px`;
     }
 
